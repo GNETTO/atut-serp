@@ -37,7 +37,12 @@ content = soup.prettify()
 for result in soup.select('.tF2Cxc'):
     title = result.select_one('.DKV0Md').text
     link = result.select_one('.yuRUbf a')['href']
-    description = result.select_one('#rso .lyLwlc').text
+    description = result.select_one('#rso .lyLwlc')
+
+    if result.find('div', class_='lyLwlc') == None:
+        description = "Pas de description"
+    else:
+        description = description.text.strip()
 
     data.append({
          'title': title,
@@ -50,18 +55,3 @@ print(data)
 
 
 #Next
-def
-search = driver.find_element(By.ID, 'pnnext')
-search.send_keys(Keys.RETURN)
-soup = BeautifulSoup(driver.page_source, 'html.parser')
-
-for result in soup.select('.tF2Cxc'):
-    title = result.select_one('.DKV0Md').text
-    link = result.select_one('.yuRUbf a')['href']
-    description = result.select_one('#rso .lyLwlc').text
-
-    data.append({
-         'title': title,
-          'lien': link,
-         'description':description,
-    })
