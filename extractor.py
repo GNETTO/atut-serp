@@ -8,7 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-import wget
+#import wget
 
 
 class Driver:
@@ -20,17 +20,16 @@ class Driver:
         options.add_argument('-headless')
         Driver.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-
 class Extractor:
 
     driver = ""
 
     def __init__(self, entries):
-        driver = Driver().driver
+        self.driver = Driver().driver
         self.search_input = entries
 
     def lunch_driver(self):
-        self.driver.get("https://www.google.com")
+        self.driver.get(f'https://www.google.com/search?={self.search_input}')
 
     def set_page_entry(self):
         search = self.driver.find_element(By.NAME, 'q')
@@ -38,11 +37,18 @@ class Extractor:
         search.send_keys(Keys.RETURN)
 
     def get_resoures(self):
+        soup = BeautifulSoup(self.driver.page_source, 'html.parser')
+        # content = soup.prettify()
         data = []
         for result in soup.select('.tF2Cxc'):
             title = result.select_one('.DKV0Md').text
             link = result.select_one('.yuRUbf a')['href']
-            description = result.select_one('#rso .lyLwlc').text
+            description = result.select_one('#rso .lyLwlc')
+
+            if result.find('div', class_="lyLwlc") == None:
+                description = None
+            else:
+                description = description.text.strip()
 
             data.append({
                 'title': title,
@@ -51,3 +57,9 @@ class Extractor:
             })
 
         return data
+
+    def start_extraction(self):
+        self.lunch_driver()
+        self.set_page_entry()
+        return self.get_resoures()
+
