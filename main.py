@@ -1,9 +1,11 @@
 
-from extractor import Extractor
-entries = "houphouet"
-extractor = Extractor(entries)
-data = extractor.start_extraction()
-print(data)
+from serp import Serp
 
+ent = ['houphouet boigny','laurent gbagbo']
+attrs = ['date de naissance', 'nationalite']
+serp = Serp(ent, attrs)
+result = serp.start()
+
+print(result)
 
 

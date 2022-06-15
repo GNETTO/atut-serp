@@ -21,20 +21,26 @@ class Driver:
         Driver.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 class Extractor:
+    #driver = ""
 
-    driver = ""
-
-    def __init__(self, entries):
+    def __init__(self):
         self.driver = Driver().driver
-        self.search_input = entries
+        #self.search_input = entries
 
-    def lunch_driver(self):
-        self.driver.get(f'https://www.google.com/search?={self.search_input}')
+    def set_entry(self, entries):
+        search_input = entries
 
-    def set_page_entry(self):
+    def lunch_driver(self, inputs):
+        self.driver.get(f'https://www.google.com/search?={inputs}')
+
+    def set_page_entry(self, inputs):
         search = self.driver.find_element(By.NAME, 'q')
-        search.send_keys(self.search_input)
+        search.send_keys(inputs)
         search.send_keys(Keys.RETURN)
+
+    def open_driver(self, inputs):
+        self.lunch_driver(inputs)
+        self.set_page_entry(inputs)
 
     def get_resoures(self):
         soup = BeautifulSoup(self.driver.page_source, 'html.parser')
@@ -58,8 +64,9 @@ class Extractor:
 
         return data
 
-    def start_extraction(self):
-        self.lunch_driver()
-        self.set_page_entry()
+    def start_extraction(self, inputs):
+        #self.lunch_driver()
+        #self.set_page_entry()
+        self.open_driver(inputs)
         return self.get_resoures()
 
