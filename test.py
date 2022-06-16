@@ -53,5 +53,3 @@ for result in soup.select('.tF2Cxc'):
 
 print(data)
 
-
-#Next
